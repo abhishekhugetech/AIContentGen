@@ -12,7 +12,6 @@ services:
     volumes:
       - ./python/app:/app/app  # Mount the local app folder to the container
     environment:
-      - WEBSOCKET_URL=""
       - GEMINI_API_KEY=${GEMINI_API_KEY}
       - SUPABASE_URL=${SUPABASE_URL}
       - SUPABASE_KEY=${SUPABASE_KEY}
