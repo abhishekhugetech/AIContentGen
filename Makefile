@@ -11,4 +11,7 @@ build_and_push:
 run_local:
 	docker compose -f docker-compose-local.yml up --build
 
+run_dev:
+	docker compose -f docker-compose-dev.yml up --build
+
 # docker pull magtapptest/contentservicepython:v1
