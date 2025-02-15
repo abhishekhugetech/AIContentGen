@@ -1,12 +1,15 @@
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, Request, Depends
 from fastapi.responses import FileResponse, Response
+from fastapi.security import APIKeyHeader
 
 import os
 from urllib.parse import quote_plus
 from app.gemini.gemini import generate_text_content, generate_audio_content
 import asyncio
-
+from app.utils.auth import check_x_api_key
 router = APIRouter()
+api_key_header = APIKeyHeader(name="x-api-key")
+
 
 @router.get("/test/")
 async def test():
@@ -15,7 +18,7 @@ async def test():
 
 # Post route to generate content from gemini
 @router.post("/generate-text-content")
-async def generate_content(request: Request):
+async def generate_content(request: Request, is_valid: dict = Depends(check_x_api_key)):
     data = await request.json()
     prompt = data.get("prompt")
 
@@ -25,7 +28,7 @@ async def generate_content(request: Request):
 
 # Post route to generate content from gemini
 @router.post("/generate-audio-content")
-async def generate_content(request: Request):
+async def generate_content(request: Request, is_valid: dict = Depends(check_x_api_key)):
     data = await request.json()
     prompt = data.get("prompt")
 
