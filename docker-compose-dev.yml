@@ -12,6 +12,7 @@ services:
       - GEMINI_API_KEY=${GEMINI_API_KEY}
       - SUPABASE_URL=${SUPABASE_URL}
       - SUPABASE_KEY=${SUPABASE_KEY}
+      - APP_API_KEY=${APP_API_KEY}
     healthcheck:
       test: [ "CMD-SHELL", "curl -f http://localhost:8000/" ]
       interval: 10s
