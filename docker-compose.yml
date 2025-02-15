@@ -1,0 +1,18 @@
+version: "3.8"
+
+name: contentapis
+
+services:
+  contentservicepython:
+    build: 
+      dockerfile: Dockerfile.local
+      context: ./python/
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./python/app:/app/app  # Mount the local app folder to the container
+    environment:
+      - WEBSOCKET_URL=""
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - SUPABASE_URL=${SUPABASE_URL}
+      - SUPABASE_KEY=${SUPABASE_KEY}

@@ -1,0 +1,7 @@
+fastapi
+uvicorn
+gunicorn
+websocket-client
+rel
+google-genai==1.2.0
+supabase
