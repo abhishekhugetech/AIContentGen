@@ -6,6 +6,7 @@ services:
   contentservicepython:
     container_name: contentservicepython
     image: magtapptest/contentservicepython:v1
+    pull_policy: always
     ports:
       - 8000:8000
     environment:
