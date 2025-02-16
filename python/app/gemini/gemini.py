@@ -24,12 +24,15 @@ async def async_enumerate(it):
     n +=1
 
 # Generate text content
-def generate_text_content(content: str):
+def generate_text_content(content: str, system_instruction: str):
     # Initialize the client
     client = genai.Client(http_options= {'api_version': 'v1alpha'}, api_key=os.getenv("GEMINI_API_KEY"))
+    config=types.GenerateContentConfig(
+        systemInstruction=system_instruction,
+        )
     # Generate the content
     response = client.models.generate_content(
-        model=MODEL, contents=content
+        model=MODEL, contents=content, config=config
     )
     # Extract the text from the response
     return response.text
@@ -44,12 +47,20 @@ def wave_file(filename, channels=1, rate=24000, sample_width=2):
         yield wf
 
 # Generate audio content
-async def generate_audio_content(message: str):
+async def generate_audio_content(message: str, audio: str, system_instruction: str):
     # Initialize the client
     client = genai.Client(http_options= {'api_version': 'v1alpha'}, api_key=os.getenv("GEMINI_API_KEY"))
-
-    config={"generation_config": {"response_modalities": ["AUDIO"]}, "speechConfig": {"voiceConfig": {"prebuiltVoiceConfig": {"voiceName": "Aoede"}}}}
-
+    config=types.GenerateContentConfig(
+        systemInstruction=system_instruction, 
+        speech_config=types.SpeechConfig(
+            voice_config=types.VoiceConfig(
+                prebuilt_voice_config=types.PrebuiltVoiceConfig(
+                    voice_name=audio
+                )
+            )  
+          )
+        )
+    
     async with client.aio.live.connect(model=MODEL, config=config) as session:
         file_name = 'audio_{}.wav'.format(uuid.uuid4())
         with wave_file(file_name) as wav:
