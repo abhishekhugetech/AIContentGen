@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Request, Depends, HTTPException
+from fastapi import APIRouter, Request, Depends, HTTPException, UploadFile
 from fastapi.responses import FileResponse, Response
 from fastapi.security import APIKeyHeader
 
@@ -7,6 +7,7 @@ from urllib.parse import quote_plus
 from app.gemini.gemini import generate_text_content, generate_audio_content
 import asyncio
 from app.utils.auth import check_x_api_key
+from app.supabase.supabase import upload_file_supabase
 router = APIRouter()
 api_key_header = APIKeyHeader(name="x-api-key")
 
@@ -14,6 +15,20 @@ api_key_header = APIKeyHeader(name="x-api-key")
 @router.get("/test/")
 async def test():
     return {"status": "Tested"}
+
+
+# Create a route for uploading files
+@router.post("/upload-file")
+async def upload_file(file: UploadFile, is_valid: dict = Depends(check_x_api_key)):
+    # get file from request
+    file_name = file.filename
+    file_obj = file.file
+    content_type = file.content_type
+    path = f"uploaded/{file_name}"
+
+    await upload_file_supabase(file_obj, path)
+
+    return {"message": "File uploaded", "file_name": file_name, "path": path}
 
 
 # Post route to generate content from gemini

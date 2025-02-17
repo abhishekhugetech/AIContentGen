@@ -16,3 +16,4 @@ services:
       - SUPABASE_URL=${SUPABASE_URL}
       - SUPABASE_KEY=${SUPABASE_KEY}
       - APP_API_KEY=${APP_API_KEY}
+      - BUCKET_NAME=${BUCKET_NAME}
