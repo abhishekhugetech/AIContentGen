@@ -19,16 +19,18 @@ async def test():
 
 # Create a route for uploading files
 @router.post("/upload-file")
-async def upload_file(file: UploadFile, is_valid: dict = Depends(check_x_api_key)):
+async def upload_file(file: UploadFile, object_path: str, is_valid: dict = Depends(check_x_api_key)):
     # get file from request
     file_name = file.filename
     file_obj = file.file
     content_type = file.content_type
-    path = f"uploaded/{file_name}"
+    path = f"uploaded/{object_path}"
 
-    await upload_file_supabase(file_obj, path)
 
-    return {"message": "File uploaded", "file_name": file_name, "path": path}
+    await upload_file_supabase(file_obj, path, content_type)
+    file_url = f"{os.environ.get('SUPABASE_URL')}/storage/v1/object/public/{os.environ.get('BUCKET_NAME')}/{path}"
+
+    return {"message": "File uploaded", "file_name": file_name, "path": path, "url": file_url}
 
 
 # Post route to generate content from gemini

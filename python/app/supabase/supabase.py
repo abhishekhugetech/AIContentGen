@@ -7,11 +7,11 @@ supabase: Client = create_client(url, key)
 
 bucket_name: str = os.environ.get("BUCKET_NAME")
 
-async def upload_file_supabase(f: any, path: str):
+async def upload_file_supabase(f: any, path: str, content_type: str):
     contents = f.read()
     response = supabase.storage.from_(bucket_name).upload(
         file=contents,
         path=path,
-        file_options={"cache-control": "3600", "upsert": "true"},
+        file_options={"cache-control": "3600", "upsert": "true", "content-type": content_type},
     )
     return response
